@@ -1,7 +1,6 @@
 flask
 flask-socketio
 eventlet
-mediapipe
 opencv-python
 numpy
 pandas
