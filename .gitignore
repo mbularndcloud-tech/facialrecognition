@@ -1,4 +1,4 @@
-# Ignore Python virtual environment
+# Python virtual environment
 venv/
 
 # Byte-compiled / cache files
@@ -21,4 +21,3 @@ dist/
 # OS files
 .DS_Store
 Thumbs.db
-
