@@ -1,0 +1,60 @@
+<!-- templates/index.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Mbula Recognition</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body class="bg-dark text-light">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+      <a class="navbar-brand" href="{{ url_for('home') }}">Mbula Recognition</a>
+    </div>
+  </nav>
+
+  <div class="container py-4">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card bg-black text-white shadow">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h4>Main Recognition</h4>
+              <div id="clock" class="fw-bold"></div>
+            </div>
+
+            <div class="position-relative">
+              <video id="video" width="100%" autoplay muted playsinline class="rounded"></video>
+              <canvas id="overlay" class="position-absolute top-0 start-0"></canvas>
+
+              <!-- overlay info -->
+              <div id="recognitionBadge" class="position-absolute top-0 end-0 m-3 p-2 rounded" style="background:rgba(0,0,0,0.6)">
+                <div id="recName" class="lead">Waiting...</div>
+                <div id="recStatus"></div>
+              </div>
+              <div id="actionBadge" class="position-absolute top-0 start-0 m-3 p-2 rounded" style="background:rgba(0,0,0,0.6)">
+                <div id="actionText" class="h5"></div>
+              </div>
+            </div>
+
+            <div class="mt-3 d-flex justify-content-between">
+              <a class="btn btn-secondary" href="{{ url_for('home') }}">Home</a>
+              <div>
+               <!-- Camera runs automatically; stop button hidden but available -->
+               <!---- <button id="stopBtn" class="btn btn-danger" disabled>Stop</button> -->
+              </div>
+            </div>
+
+            <p class="mt-3 text-muted small"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.min.js"></script>
+  <script src="{{ url_for('static', filename='js/recognition.js') }}"></script>
+</body>
+</html>

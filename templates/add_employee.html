@@ -1,0 +1,86 @@
+<!-- templates/add_employee.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Add Employee</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+      <a class="navbar-brand" href="{{ url_for('admin_dashboard') }}">Back to Dashboard</a>
+    </div>
+  </nav>
+
+  <div class="container py-4">
+    <div class="card mx-auto" style="max-width:720px">
+      <div class="card-body">
+        <h4>Add Employee</h4>
+        <form method="post" enctype="multipart/form-data" action="">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">First name</label>
+              <input class="form-control" name="name" value="{{ employee.name if employee else '' }}" {% if employee %}readonly{% endif %} required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Surname</label>
+              <input class="form-control" name="surname" value="{{ employee.surname if employee else '' }}" {% if employee %}readonly{% endif %} required>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Employee code (optional)</label>
+            <input class="form-control" name="employee_code" placeholder="Auto-generated if blank">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Upload photos (ideally 5+ with different angles)</label>
+            <input id="imagesInput" class="form-control" type="file" name="images" accept="image/*" multiple>
+            <div class="form-text">Photos should clearly show the face. You can also take photos from the webcam later and upload them here.</div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Upload short videos (optional) — multiple allowed</label>
+            <input id="videosInput" class="form-control" type="file" name="videos" accept="video/*" multiple>
+            <div class="form-text">Short videos (5–30s) help capture expressions and pose variations. Admins can upload multiple videos. The system will sample frames and add embeddings.</div>
+            <div id="selectedFiles" class="mt-2 small text-muted">No files selected</div>
+          </div>
+
+          <div class="d-flex justify-content-between">
+            <a class="btn btn-secondary" href="{{ url_for('admin_dashboard') }}">Back</a>
+            <button class="btn btn-primary">Add Employee</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const input = document.getElementById('imagesInput');
+    const list = document.getElementById('selectedFiles');
+
+    if (!input) return;
+
+    input.addEventListener('change', () => {
+      const files = Array.from(input.files || []);
+      if (!files.length) {
+        list.textContent = 'No files selected';
+        return;
+      }
+
+      // Show count and up to first 10 filenames (relative path if browser provides it)
+      const count = files.length;
+      const preview = files.slice(0, 10).map(f => {
+        // Some browsers include relative path in the 'webkitRelativePath' property
+        const rel = f.webkitRelativePath ? f.webkitRelativePath : f.name;
+        return rel;
+      });
+
+      list.innerHTML = `${count} file(s) selected. ${preview.length < count ? 'Showing first ' + preview.length + ': ' : ''}<br><small>${preview.join('<br>')}</small>`;
+    });
+  });
+</script>
+
+</body>
+</html>

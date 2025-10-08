@@ -1,0 +1,15 @@
+flask
+flask-socketio
+eventlet
+mediapipe
+opencv-python
+numpy
+pandas
+openpyxl
+reportlab
+pillow
+werkzeug
+torch
+torchvision
+facenet-pytorch
+

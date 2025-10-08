@@ -1,0 +1,125 @@
+<!-- templates/admin_dashboard.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Admin Dashboard</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body class="bg-light">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+      <a class="navbar-brand" href="{{ url_for('home') }}">Mbula Recognition</a>
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h3>Admin Dashboard</h3>
+      <div>
+        <a href="{{ url_for('add_employee') }}" class="btn btn-outline-primary">Add Employee</a>
+        <a href="{{ url_for('export_excel') }}{% if query_string %}?{{ query_string }}{% endif %}" class="btn btn-success">Export Excel</a>
+        <a href="{{ url_for('export_pdf') }}{% if query_string %}?{{ query_string }}{% endif %}" class="btn btn-danger">Export PDF</a>
+      </div>
+    </div>
+
+    <div class="card mb-3">
+      <div class="card-body">
+        <form method="post" action="{{ url_for('remove_employee') }}" class="d-flex gap-2 align-items-center mb-3">
+          <select name="employee_id" class="form-select" style="width: 320px;">
+            <option value="">Select employee to remove</option>
+            {% for e in employees %}
+              <option value="{{ e['id'] }}">{{ e['name'] }} {{ e['surname'] }}</option>
+            {% endfor %}
+          </select>
+          <button class="btn btn-outline-danger" type="submit" onclick="return confirm('Are you sure you want to delete this employee?')">Remove</button>
+        </form>
+        
+        <!-- Add More Images Dropdown -->
+        <div class="dropdown mb-3 ms-2">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="addMoreImagesDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            Add More Images
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="addMoreImagesDropdown">
+            {% for emp in employees %}
+              <li>
+                <a class="dropdown-item" href="{{ url_for('add_employee', emp_id=emp['id']) }}">
+                  {{ emp['name'] }} {{ emp['surname'] }}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <!-- FILTER FORM -->
+        <form method="get" action="{{ url_for('admin_dashboard') }}" class="row g-2 align-items-end">
+          <div class="col-md-4">
+            <label class="form-label small">Employee</label>
+            <select name="employee_id" class="form-select">
+              <option value="">All employees</option>
+              {% for e in employees %}
+                <option value="{{ e['id'] }}" {% if selected.employee_id and selected.employee_id|string == e['id']|string %}selected{% endif %}>{{ e['name'] }} {{ e['surname'] }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label small">Month</label>
+            <input id="monthInput" name="month" class="form-control" type="month" value="{{ selected.month }}">
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label small">Week</label>
+            <input id="weekInput" name="week" class="form-control" type="week" value="{{ selected.week }}">
+          </div>
+
+          <div class="col-md-2 d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Filter</button>
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary">Reset</a>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <table class="table table-striped" id="recordsTable">
+          <thead>
+            <tr>
+              <th>ID</th><th>Name</th><th>Surname</th><th>Date</th><th>Clock In</th><th>Clock Out</th><th>Minutes</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if records %}
+              {% for r in records %}
+                <tr>
+                  <td>{{ r.get('id', '') }}</td>
+                  <td>{{ r.get('emp_name', '') }}</td>
+                  <td>{{ r.get('emp_surname', '') }}</td>
+                  <td>{{ r.get('date', '') }}</td>
+                  <td>{{ r.get('clock_in') if r.get('clock_in') else '-' }}</td>
+                  <td>{{ r.get('clock_out') if r.get('clock_out') else '-' }}</td>
+                  <td>{{ r.get('minutes_in_office') if r.get('minutes_in_office') is not none else '' }}</td>
+                </tr>
+              {% endfor %}
+            {% else %}
+              <tr>
+                <td colspan="7" class="text-center text-muted">No records found.</td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <!-- Bootstrap JS (bundle includes Popper) - required for dropdowns -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+</body>
+</html>

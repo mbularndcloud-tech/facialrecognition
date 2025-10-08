@@ -1,0 +1,7 @@
+/* static/css/style.css */
+body { font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
+
+#video { background: #222; border-radius: 8px; }
+#overlay { pointer-events: none; }
+#recognitionBadge { color: #fff; }
+#actionBadge { color: #fff; }
